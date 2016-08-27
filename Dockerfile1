@@ -1,0 +1,53 @@
+
+#Imagen Base modelo TLON modelo red Ad Hoc
+
+FROM resin/rpi-raspbian
+MAINTAINER Henry Zarate <hzaratec@unal.edu.co>
+#Copiamos el directorio con los paquetes que necesitamos
+
+COPY . /home/pi/TLON
+
+
+#Instalación de Python 3.5 para el desarrollo de los scripts
+
+WORKDIR /home/pi/TLON
+RUN sudo apt-get update
+RUN sudo apt-get install wget
+RUN sudo wget --no-check-certificate https://www.python.org/ftp/python/3.5.0/Python-3.5.0.tgz
+RUN tar -zxvf Python-3.5.0.tgz
+RUN cd Python-3.5.0\
+    ./configure\
+    make\
+    sudo make install
+RUN sudo apt-get install libnl-3-200 libnl-genl-3-200 libnl-route-3-200
+
+#Se agregan los páquetes necesarios para que la imagen corra en modo ad hoc y con los programas, que se vayan agregando
+
+COPY Adhoc.py /home/pi/Adhoc.py
+COPY batctl_2016.2-1_armhf.deb /home/pi/batctl_2016.2-1_armhf.deb
+COPY batman-adv-2016.2.tar.gz /home/pi/batman-adv-2016.2.tar.gz
+
+#Instalación de los paquetes batman.
+RUN dpkg -i batctl_2016.2-1_armhf.deb
+ 
+COPY install1.sh /home/pi/install1.sh
+RUN tar -xvzf batman-adv-2016.2.tar.gz 
+RUN cd batman-adv-2016.2\
+    make\
+    sudo Makefile
+
+
+#Corremos el archivo copiado en el filesystem 
+#CMD ["python"]
+#CMD ["python3"," /home/pi/TLON/Adhoc.py"]
+
+#RUN python /home/pi/TLON/Adhoc.py
+RUN cd /usr/local/bin \
+	&& { [ -e easy_install ] || ln -s easy_install-* easy_install; } \
+	&& ln -s idle3 idle \
+	&& ln -s pydoc3 pydoc \
+	&& ln -s python3 python \
+	&& ln -s python3-config python-config
+ENTRYPOINT ["python"]
+CMD ["python3"]
+RUN python3 Adhoc.py

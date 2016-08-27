@@ -1,0 +1,21 @@
+
+#Imagen Base modelo TLON modelo red Ad Hoc
+
+FROM resin/rpi-raspbian
+
+MAINTAINER Henry Zarate <hzaratec@unal.edu.co>
+#Copiamos el directorio con los paquetes que necesitamos
+RUN apt-get update
+RUN apt-get install -y python
+RUN apt-get install -y python-pip
+RUN apt-get clean all
+
+ADD Adhoc.py /home/pi/Adhoc.py
+#Corremos el archivo copiado en el filesystem 
+CMD ["python","home/pi/Adhoc.py"]
+#CMD ["python3"," /home/pi/TLON/Adhoc.py"]
+
+#RUN python /home/pi/TLON/Adhoc.py
+#ENTRYPOINT ["python"]
+#CMD ["python3"]
+#RUN python Adhoc.py
