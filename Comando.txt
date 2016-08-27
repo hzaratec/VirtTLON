@@ -1,0 +1,1 @@
+docker run --name lvm --rm --privileged --cap-add=ALL -it -v /dev:/dev -v /lib/modules:/lib/modules docker.io/nombre 
