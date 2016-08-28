@@ -64,13 +64,20 @@ RUN sudo apt-get install -y net-tools
 RUN sudo apt-get install wireless-tools
 RUN sudo apt-get install libnl-3-200 libnl-genl-3-200 libnl-route-3-200
 RUN apt-get install avahi-daemon avahi-discover libnss-mdns
+RUN sudo apt-get install mongodb-server
+RUN sudo apt-get install wget
+RUN  cd /usr/local/lib
+RUN wget http://www.antlr.org/download/antlr-4.5.3-complete.jar
+RUN export CLASSPATH=".:/usr/local/lib/antlr-4.5.3-complete.jar:$CLASSPATH"
+RUN alias antlr4='java -jar /usr/local/lib/antlr-4.5.3-complete.jar'
+RUN alias grun='java org.antlr.v4.gui.TestRig'
 #Se agregan los páquetes necesarios para que la imagen corra en modo ad hoc y con los programas, que se vayan agregando
 COPY . /home/pi/TLON
 
 #Instalación de Python 3.5 para el desarrollo de los scripts
 
 
-#WORKDIR /home/pi/TLON
+WORKDIR /home/pi/TLON
 #COPY Adhoc.py /home/pi/TLON/Adhoc.py
 COPY batctl_2016.2-1_armhf.deb /home/pi/TLON/batctl_2016.2-1_armhf.deb
 #COPY batman-adv-2016.2 /home/pi/TLON/batman-adv-2016.2
@@ -80,7 +87,7 @@ RUN dpkg -i batctl_2016.2-1_armhf.deb
 #CMD ["/bin/bash"]
 #COPY /home/pi/TLON/Adhoc.py /home/pi/TLON/Adhoc.py
 #CMD ["python3","home/pi/TLON/Adhoc.py"]
-CMD ["modprobe batman-adv"]
-RUN python3 Adhoc.py
+#CMD ["modprobe batman-adv"]
+#RUN python3 Adhoc.py
 #CMD ["batctl -v","/home/pi"]
-RUN batctl -v
+#RUN batctl -v
