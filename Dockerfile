@@ -68,10 +68,13 @@ RUN apt-get install iproute2
 RUN sudo apt-get install mongodb-server
 RUN sudo apt-get install vim
 RUN sudo apt-get install wget
-RUN  cd /usr/local/lib
+RUN sudo apt-get install oracle-java8-jdk
+#RUN  cd /usr/local/lib
 RUN wget http://www.antlr.org/download/antlr-4.5.3-complete.jar
-RUN export CLASSPATH=".:/usr/local/lib/antlr-4.5.3-complete.jar:$CLASSPATH"
-RUN alias antlr4='java -jar /usr/local/lib/antlr-4.5.3-complete.jar'
+ENV antlr4="java -jar /antlr-4.5.3-complete.jar:$CLASSPATH"
+ENV CLASSPATH=".:/antlr-4.5.3-complete.jar:$CLASSPATH"
+#RUN export CLASSPATH=".:/antlr-4.5.3-complete.jar:$CLASSPATH"
+RUN alias antlr4='java -jar /antlr-4.5.3-complete.jar'
 RUN alias grun='java org.antlr.v4.gui.TestRig'
 RUN  apt-get install -y git
 #Se agregan los páquetes necesarios para que la imagen corra en modo ad hoc y con los programas, que se vayan agregando
@@ -79,12 +82,7 @@ COPY . /home/pi/TLON
 
 #Instalación de Python 3.5 para el desarrollo de los scripts
 
-
 WORKDIR /home/pi/TLON
 COPY batctl_2016.2-1_armhf.deb /home/pi/TLON/batctl_2016.2-1_armhf.deb
 #Instalación de los paquetes batman.
 RUN dpkg -i batctl_2016.2-1_armhf.deb
-#RUN python3 Adhoc.py
-#CMD ["batctl -v","/home/pi"]
-#RUN batctl -v
-#CMD ["mongod"]
